@@ -1,0 +1,122 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <Description>Yolo Darknet Wrapper, Real-Time Object Detection (yolo core of AlexeyAB/darknet), CUDA 10.1</Description>
+    <Authors>Alturos Destinations</Authors>
+    <Company>Alturos DestinationsAlturos Destinations</Company>
+    <PackageTags>darknet yolo yolo3 yolov3 yolo2 yolov2 objectdetection object-detection neural-network dnn deep-learning</PackageTags>
+    <PackageReleaseNotes>.netstandard 2.0 support, add linux support, optimize folder structure</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/AlturosDestinations/Alturos.Yolo/master/doc/logo.png</PackageIconUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/AlturosDestinations/Alturos.Yolo</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AlturosDestinations/Alturos.Yolo</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>3.0.6-alpha</Version>
+    <AssemblyVersion>3.0.6</AssemblyVersion>
+    <FileVersion>3.0.6</FileVersion>
+  </PropertyGroup>
+
+  <!-- Only for .netstandard 2.0 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+  <!-- Only for .net4-->
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <!-- Only for current solution, copy files to x64 folder -->
+  <ItemGroup Condition="'$(OS)' != 'Unix'">
+    <ContentWithTargetPath Include="dependencies/win/opencv_world411.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>opencv_world411.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="dependencies/win/yolo_cpp_dll_cpu.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>yolo_cpp_dll_cpu.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="dependencies/win/yolo_cpp_dll_gpu.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>yolo_cpp_dll_gpu.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="dependencies/win/pthreadGC2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>pthreadGC2.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="dependencies/win/pthreadVC2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>pthreadVC2.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="dependencies/win/msvcr100.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>msvcr100.dll</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+  <ItemGroup Condition="'$(OS)' == 'Unix'">
+    <ContentWithTargetPath Include="dependencies/linux/yolo_cpp_dll_cpu.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>x64/yolo_cpp_dll_cpu.so</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+
+  <!-- Required to copy files into the nuget package -->
+  <ItemGroup>
+    <Content Include="dependencies/win/opencv_world411.dll">
+      <PackagePath>runtimes/win-x64/native/opencv_world411.dll</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="dependencies/win/yolo_cpp_dll_cpu.dll">
+      <PackagePath>runtimes/win-x64/native/yolo_cpp_dll_cpu.dll</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="dependencies/win/yolo_cpp_dll_gpu.dll">
+      <PackagePath>runtimes/win-x64/native/yolo_cpp_dll_gpu.dll</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="dependencies/win/pthreadGC2.dll">
+      <PackagePath>runtimes/win-x64/native/pthreadGC2.dll</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="dependencies/win/pthreadVC2.dll">
+      <PackagePath>runtimes/win-x64/native/pthreadVC2.dll</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="dependencies/win/msvcr100.dll">
+      <PackagePath>runtimes/win-x64/native/msvcr100.dll</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="dependencies/linux/yolo_cpp_dll_cpu.so">
+      <PackagePath>runtimes/linux-x64/native/yolo_cpp_dll_cpu.so</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="readme.txt">
+      <Pack>true</Pack>
+      <PackagePath>/</PackagePath>
+    </Content>
+
+    <!-- Required for the target project to know where to copy the files  -->
+    <Content Include="Alturos.Yolo.targets">
+      <Pack>true</Pack>
+      <PackagePath>build/</PackagePath>
+    </Content>
+
+    <None Include="..\..\LICENSE.md">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </None>
+
+    <None Include="..\..\doc\logo.png">
+      <Pack>true</Pack>
+      <Visible>false</Visible>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
